@@ -1,0 +1,6 @@
+# AngularGameOfLife
+
+a relatively simple angular js implimentation of the game of life:
+https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+
+Used as a learning tool to teach myself things about angular js
