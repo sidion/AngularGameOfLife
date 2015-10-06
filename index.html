@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <title>Angular Game of Life</title>
+<script type="text/javascript"
+        src="angular1.3.min.js"></script>
+    <script type="text/javascript">
+	var myApp = angular.module('myApp', []);
+	myApp.controller('MainCtrl', ['$scope', function ($scope, $interval) {
+	$scope.prom
+	$scope.height = 5;
+	$scope.width = 15;
+	$scope.makeBoard = function (rows, cols){
+		var arr = [];
+		for(var i=0; i < rows; i++){
+		      	arr.push([]);
+		      	arr[i].push( new Array(cols));
+
+		      	for(var j=0; j < cols; j++){
+				 Initializes:
+				arr[i][j] = {alive: 0};
+		      	}
+		}
+
+		return arr;
+	};
+
+	$scope.board = $scope.makeBoard($scope.height,$scope.width);
+	$scope.newBoard
+
+ 	$scope.setIndexTo1 = function (row, column){
+		console.log("button press: " + row +":"+ column)
+		$scope.board[row][column].alive = 1
+	};
+
+	$scope.start = function(){
+		console.log("start pressed");
+		$scope.prom = setInterval(function(){$scope.$apply($scope.tick())},1000);
+	};
+	$scope.pause = function(){
+		console.log("pause pressed");
+		clearInterval($scope.prom);
+	};
+
+	$scope.reset = function(){
+		console.log("reset pressed");
+		$scope.board = $scope.makeBoard($scope.height,$scope.width);
+	};
+	
+	$scope.tick = function (){
+		//here we will process the board
+		console.log("tick")
+		$scope.newBoard = $scope.makeBoard($scope.height, $scope.width);
+		var a = 0;
+		var b = 0;
+		var n = 0;
+		for (a=0;a < $scope.board.length;a++){
+			for (b=0; b < $scope.board[a].length; b++){
+				n = 0;
+				//upper 
+				if (a > 0){
+					//left:
+					if ( b > 0) n = n + $scope.board[a-1][b-1].alive;
+					//middle
+					n = n + $scope.board[a-1][b].alive;
+					//right
+					if (b < $scope.board[0].length - 2) n = n + $scope.board[a-1][b+1].alive;
+				}
+				//left
+				if (b > 0) n = n + $scope.board[a][b-1].alive;
+				//right
+				if (b < $scope.board[0].length -2) n = n + $scope.board[a][b+1].alive;
+				//lower 
+				if (a < $scope.board.length -2){
+					//left:
+					if (b > 0) n = n + $scope.board[a+1][b-1].alive;
+					//middle
+					n = n + $scope.board[a+1][b].alive;
+					//right
+					if (b < $scope.board.length -2) n = n + $scope.board[a+1][b+1].alive;
+				}
+
+				if ($scope.board[a][b].alive == 1){
+					if (n > 1 && n < 4 && a < $scope.newBoard.length && b < $scope.newBoard[0].length)
+						$scope.newBoard[a][b].alive = 1;
+				}
+				else
+					if (n == 3 && a < $scope.newBoard.length && b < $scope.newBoard[0].length)
+						$scope.newBoard[a][b].alive = 1;
+
+				
+			}
+		}
+		$scope.board = $scope.newBoard;
+	
+	};
+
+	
+	}]);
+    </script>
+</head>
+<body>
+  <div ng-app="myApp">
+    <div ng-controller="MainCtrl">
+	<button ng-click="start()">Start</button> <button ng-click="pause()">Pause</button> <button ng-click="tick()">Step</button> <button ng-click="reset()">Reset</button>
+	Height: <input ng-model="height" label="Height" size="1"/>  Width: <input ng-model="width" label="Width" size="1"/>
+	<p ng-repeat="a in board">
+	  <button ng-repeat="b in a track by $index" ng-click="setIndexTo1($parent.$index,$index)" style="{{b.alive ? 'background:blue':'background:red'}}"  >{{ b.alive }}</button>
+	</p>
+    </div>
+  </div>
+</body>
+</html> 
